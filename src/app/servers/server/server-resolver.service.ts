@@ -1,19 +1,26 @@
 import { Injectable } from '@angular/core';
 import {ActivatedRouteSnapshot, Resolve, RouterStateSnapshot} from '@angular/router';
 import {Observable} from 'rxjs';
+import {ServersService} from '../servers.service';
+
+interface Server {
+  id: number;
+  name: string;
+  status: string;
+}
 
 @Injectable({
   providedIn: 'root'
 })
-export class ServerResolverService implements Resolve<{id: number, name: string, status: string}> {
+export class ServerResolverService implements Resolve<Server> {
 
-  constructor() { }
+  constructor(private serversService: ServersService) { }
 
   resolve(route: ActivatedRouteSnapshot,
           state: RouterStateSnapshot):
-    Observable<{ id: number; name: string; status: string }> |
-    Promise<{ id: number; name: string; status: string }> |
-    { id: number; name: string; status: string } {
-    return undefined;
+    Observable<Server> |
+    Promise<Server> |
+    Server {
+    return this.serversService.getServer(+route.params['id']);
   }
 }
